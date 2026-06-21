@@ -16,10 +16,11 @@
 * **카카오 쇼핑하기:** 가로 750px 리사이즈 + 세로 3000px 자동 분할
 * **오픈마켓 통합 썸네일:** 중앙 기준 1:1 정방형 크롭 및 1000x1000px 변환
 
-## 🛠️ 기술 스택
-* HTML5 / CSS3 (Responsive Design)
-* Vanilla JavaScript (Canvas API)
-* JSZip (Client-side ZIP Archive Generation)
+## 🛠️ 기술 스택 및 개발 툴
+* **AI Co-Pilot:** Google Antigravity 2.0 (코드 설계 및 최적화)
+* **Frontend:** HTML5 / CSS3 (Responsive Design)
+* **Core Engine:** Vanilla JavaScript (HTML5 Canvas API)
+* **Libraries:** JSZip (Client-side ZIP Archive Generation)
 
 ## 📄 라이선스 및 안내
 * 본 프로젝트는 개인 소장 및 비상업적/상업적 이용이 모두 무료입니다. 
