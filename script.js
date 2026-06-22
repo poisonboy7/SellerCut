@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedFiles.forEach((file, index) => {
                 const div = document.createElement('div');
                 div.className = 'preview-item';
-                // 파일명이 너무 길 경우 대비해 잘라내기
-                const displayName = file.name.length > 25 ? file.name.substring(0, 22) + '...' : file.name;
+                // 파일명이 너무 길 경우 대비해 잘라내기 (크롭 표시를 위해 길이 연장)
+                const displayName = file.name.length > 35 ? file.name.substring(0, 32) + '...' : file.name;
                 div.innerHTML = `
                     <span class="file-name">${displayName}</span>
                     <div class="preview-actions">
@@ -143,7 +143,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 크롭된 캔버스를 Blob으로 변환 후 File 객체로 다시 저장
         canvas.toBlob((blob) => {
-            const croppedFile = new File([blob], `cropped_${originalFile.name}`, {
+            // 파일명에 [크롭됨] 추가 (중복 방지)
+            let newName = originalFile.name;
+            if (!newName.startsWith('[크롭됨] ')) {
+                newName = `[크롭됨] ${newName}`;
+            }
+
+            const croppedFile = new File([blob], newName, {
                 type: fileType,
                 lastModified: Date.now()
             });
@@ -151,6 +157,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // 기존 파일을 크롭된 파일로 교체
             selectedFiles[currentCropIndex] = croppedFile;
             renderPreview();
+            
+            // 💡 자동 다운로드 트리거 추가
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = newName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
             
             cropModal.classList.add('hidden');
             cropper.destroy();
