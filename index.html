@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="naver-site-verification" content="365bebdb06958d2ab3e1afe03459027ba5f4b192" />
+    <meta name="google-site-verification" content="7yHSD1vzkD6i3-bwgEOaVIiNIG1vfvomN66Zv8MV2OY" />
     <title>셀러컷(SellerCut) - 쇼핑몰 상세페이지 원클릭 리사이즈 & 무료 자르기 툴</title>
     <meta name="description" content="가입/결제 없는 1초 상세페이지 분할기. 스마트스토어 860px, 쿠팡 780px, 11번가 규격 맞춤 리사이즈 및 이미지 수직 절단 기능을 제공합니다.">
     <meta property="og:type" content="website">
@@ -22,6 +24,7 @@
         <header>
             <h1><span class="gradient-text">SellerCut</span></h1>
             <p class="subtitle">로그인도 결제도 필요 없어요! 소중한 상품 이미지는 서버 전송 없이 내 PC에서 100% 안전하게 쓱싹 변환해 드려요 ✨</p>
+            <div class="privacy-badge">🛡️ 스마트폰 사진 위치정보(GPS/EXIF) 자동 삭제 보호 적용됨</div>
         </header>
 
         <main>
@@ -45,6 +48,11 @@
 
             <section class="action-section">
                 <h2 class="section-title">플랫폼별 최적화 <span>(원클릭 변환)</span></h2>
+                
+                <div class="watermark-settings">
+                    <label for="watermark-text">📷 불펌 방지 워터마크 (선택사항)</label>
+                    <input type="text" id="watermark-text" placeholder="예: 무단 도용 금지 / SellerCut">
+                </div>
                 <div class="button-grid">
                     <button class="action-btn" data-type="smartstore">
                         <div class="btn-content">
@@ -78,8 +86,20 @@
                     </button>
                     <button class="action-btn accent-btn" data-type="thumbnail">
                         <div class="btn-content">
-                            <span class="btn-title">오픈마켓 통합 썸네일</span>
+                            <span class="btn-title">통합 썸네일 (꽉 차게 자르기)</span>
                             <span class="btn-desc">중앙 1:1 크롭, 1000x1000px 리사이즈</span>
+                        </div>
+                    </button>
+                    <button class="action-btn accent-btn" data-type="thumbnail-pad">
+                        <div class="btn-content">
+                            <span class="btn-title">통합 썸네일 (여백 채우기)</span>
+                            <span class="btn-desc">잘림 없이 원본 비율 유지, 흰색 배경 추가</span>
+                        </div>
+                    </button>
+                    <button class="action-btn" data-type="webp">
+                        <div class="btn-content">
+                            <span class="btn-title">자사몰 / 블로그 (WebP)</span>
+                            <span class="btn-desc">가로 860px, 세로 4000px 분할<br>(차세대 초고압축 포맷)</span>
                         </div>
                     </button>
                 </div>

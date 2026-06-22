@@ -218,6 +218,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 워터마크 그리기 함수
+    function drawWatermark(ctx, text, width, height) {
+        if (!text) return;
+        ctx.save();
+        ctx.font = 'bold 24px "Noto Sans KR", sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        ctx.shadowBlur = 4;
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'bottom';
+        // 우측 하단 여백 20px
+        ctx.fillText(text, width - 20, height - 20);
+        ctx.restore();
+    }
+
     // 캔버스 기반 핵심 이미지 리사이즈 및 분할 로직
     async function applyProcessing(img, originalName, type, zip) {
         // 원본 파일명에서 확장자 제거
@@ -225,23 +242,42 @@ document.addEventListener('DOMContentLoaded', () => {
         nameParts.pop(); 
         const nameWithoutExt = nameParts.join('.') || originalName;
         
-        // --- 기능 1: 썸네일 (1:1 크롭 및 리사이즈) ---
-        if (type === 'thumbnail') {
-            const size = Math.min(img.width, img.height);
-            const sx = (img.width - size) / 2;
-            const sy = (img.height - size) / 2;
-            
+        const watermarkText = document.getElementById('watermark-text').value.trim();
+        
+        // --- 기능 1: 썸네일 (꽉 차게 자르기 또는 여백 추가) ---
+        if (type === 'thumbnail' || type === 'thumbnail-pad') {
+            const size = 1000;
             const canvas = document.createElement('canvas');
-            canvas.width = 1000;
-            canvas.height = 1000;
+            canvas.width = size;
+            canvas.height = size;
             const ctx = canvas.getContext('2d');
             
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
+
+            if (type === 'thumbnail') {
+                const minSide = Math.min(img.width, img.height);
+                const sx = (img.width - minSide) / 2;
+                const sy = (img.height - minSide) / 2;
+                ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+            } else {
+                // thumbnail-pad (여백 추가)
+                ctx.fillStyle = '#ffffff'; // 흰색 배경
+                ctx.fillRect(0, 0, size, size);
+                
+                const scale = Math.min(size / img.width, size / img.height);
+                const drawWidth = img.width * scale;
+                const drawHeight = img.height * scale;
+                const dx = (size - drawWidth) / 2;
+                const dy = (size - drawHeight) / 2;
+                ctx.drawImage(img, 0, 0, img.width, img.height, dx, dy, drawWidth, drawHeight);
+            }
             
-            ctx.drawImage(img, sx, sy, size, size, 0, 0, 1000, 1000);
+            drawWatermark(ctx, watermarkText, size, size);
+            
+            const suffix = type === 'thumbnail' ? '_thumb.jpg' : '_thumb_pad.jpg';
             const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-            zip.file(`${nameWithoutExt}_thumb.jpg`, dataUrl.split(',')[1], {base64: true});
+            zip.file(`${nameWithoutExt}${suffix}`, dataUrl.split(',')[1], {base64: true});
             return;
         }
         
@@ -259,6 +295,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetWidth = 850; splitHeight = 4000; format = 'image/jpeg'; quality = 0.95; break;
             case 'kakao': 
                 targetWidth = 750; splitHeight = 3000; format = 'image/jpeg'; quality = 0.95; break;
+            case 'webp': 
+                targetWidth = 860; splitHeight = 4000; format = 'image/webp'; quality = 0.85; break; // WebP 고압축 포맷
             default: return;
         }
         
@@ -286,9 +324,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // 캔버스에 해당 영역만 그리기
             ctx.drawImage(img, 0, sy, img.width, sHeight, 0, 0, targetWidth, Math.round(partHeight));
             
+            // 워터마크 그리기
+            drawWatermark(ctx, watermarkText, targetWidth, Math.round(partHeight));
+            
             // 이미지 데이터 인코딩
             const dataUrl = canvas.toDataURL(format, quality);
-            const ext = 'jpg'; 
+            const ext = format === 'image/webp' ? 'webp' : 'jpg'; 
             
             // 01, 02 등 두자리 넘버링
             const partNum = String(i + 1).padStart(2, '0');

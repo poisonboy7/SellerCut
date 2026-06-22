@@ -224,6 +224,47 @@ header {
     background: rgba(255,255,255,0.15);
 }
 
+/* 워터마크 및 프라이버시 배지 */
+.privacy-badge {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 16px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.watermark-settings {
+    margin-bottom: 30px;
+    text-align: center;
+}
+.watermark-settings label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.watermark-settings input {
+    width: 100%;
+    max-width: 450px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    background: rgba(0,0,0,0.3);
+    color: var(--text-primary);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+}
+.watermark-settings input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
 /* 구글 애드센스 광고 영역 */
 .ad-container {
     margin: 40px auto;
